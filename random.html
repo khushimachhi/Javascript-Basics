@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital ID</title>
+    <link rel="stylesheet" href="random.css">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <div id="g_id_onload" data-client_id="YOUR_CLIENT_ID.apps.googleusercontent.com">
+    </div>
+    <div id="g_id_signin"></div>`
+    <script>
+        function onSignIn(googleUser) {
+            var id_token = googleUser.getAuthResponse().id_token;
+            var xhr = new XMLHttpRequest();
+            xhr.open('POST', 'YOUR_SERVER_URL');
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function() {
+                var response = JSON.parse(xhr.responseText);
+                if (response.status === 'success') {
+                    // Display the digital ID
+                    var digitalId = document.createElement('div');
+                    digitalId.innerHTML = response.digitalId;
+                    document.body.appendChild(digitalId);
+                } else {
+                    // Display an error message
+                    var errorMessage = document.createElement('div');
+                    errorMessage.innerHTML = response.message;
+                    document.body.appendChild(errorMessage);
+                }
+            };
+            xhr.send('idtoken=' + id_token);
+        }
+    </script>
+</body>
+</html>
